@@ -1,5 +1,6 @@
 "use client"
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { useScroll } from 'framer-motion';
 import ProjectCard from './ProjectCard';
 import FadeIn from './FadeIn';
 
@@ -99,7 +100,7 @@ const projects: ProjectItem[] = [
     shortDesc: ' AI travel planner',
     name: 'Rekreasi AI',
     filterTags: ['ai','custom'],
-    href: 'https://rekreasi.com/',
+    href: '',
     description:
     'Created a multilingual AI travel planner that generates custom itineraries instantly. Supported English and Indonesian audiences with location-based recommendations.',
     techStack: ["Nextjs","NestJs","OpenAI","i18n"],
@@ -148,7 +149,7 @@ const projects: ProjectItem[] = [
     shortDesc: 'Company Profile Website Education',
     name: 'Genza',
     filterTags: ['landingpage'],
-    href: '',
+    href: 'https://glacier.io/',
     description:
     'Landingpage for website education in Indonesia with cms ',
     techStack: ["Nextjs","Tanstack Query"],
@@ -221,7 +222,7 @@ const projects: ProjectItem[] = [
     href: 'https://bearhost.com/',
     description:
     'Built a user-friendly hosting site offering layered hosting services through a simple, approachable interface tailored for beginners and pros alike. (Effortless setup, domain integration, cPanel, free SSL,scalable plans). ',
-    techStack: ["NextJS","Stripe","WHMCS","Tanstack Query"],
+    techStack: ["NextJS","Stripe","WHMCS"],
     images: {
       col2: [
         '/gif/bearhost.gif', ],
@@ -246,6 +247,11 @@ const projects: ProjectItem[] = [
 
 export default function ProjectsSection() {
   const [activeTab, setActiveTab] = useState<TabId>('all');
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
 
   const visibleProjects = useMemo(() => {
     if (activeTab === 'all') return projects;
@@ -254,9 +260,10 @@ export default function ProjectsSection() {
 
   return (
     <section
-      id="projects"
+      id={"projects"}
+      ref={containerRef}
       className="relative px-5 sm:px-8 md:px-10 rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-10"
-      style={{ backgroundColor: '#0C0C0C', overflowX: 'clip' }}
+      style={{ backgroundColor: '#0C0C0C' }}
     >
       <div className="flex flex-col items-center py-20 sm:py-24 md:py-32">
         <FadeIn delay={0} y={40}>
@@ -286,13 +293,15 @@ export default function ProjectsSection() {
         </FadeIn>
       </div>
 
-      <div className="flex flex-col gap-10 sm:gap-12 md:gap-16 pb-20 sm:pb-24 md:pb-32 max-w-[1760px] mx-auto w-full">
-        {visibleProjects.map((project, index) => (
-          <FadeIn key={project.name} delay={index * 0.04} y={36}>
-            <ProjectCard project={project} />
-          </FadeIn>
-        ))}
-      </div>
+      {visibleProjects.map((project, index) => (
+        <ProjectCard
+          key={index}
+          project={project}
+          index={index}
+          totalCards={visibleProjects.length}
+          progress={scrollYProgress}
+        />
+      ))}
     </section>
   );
 }
