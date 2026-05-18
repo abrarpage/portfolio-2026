@@ -146,6 +146,20 @@ const projects: ProjectItem[] = [
   },
   {
     number: '01',
+    shortDesc: 'LandingPage for esport in India',
+    name: 'Bharat Ascend',
+    filterTags: ['landingpage'],
+    href: 'https://bharatascendesports.com/',
+    description:
+    'Landingpage for esport in India ',
+    techStack: ["Nextjs","TailwindCss"],
+    images: {
+      col2: [
+        '/gif/bharat-ascend.gif', ],
+    }
+  },
+  {
+    number: '01',
     shortDesc: 'Company Profile Website Education',
     name: 'Genza',
     filterTags: ['landingpage'],
